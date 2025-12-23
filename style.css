@@ -1,0 +1,238 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+@font-face {
+  font-family: 'Atkinson-Hyperlegible';
+  src: url(assets/fonts/AtkinsonHyperlegible-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'Atkinson-Hyperlegible';
+  src: url(assets/fonts/AtkinsonHyperlegible-Bold.ttf);
+  font-weight: bold;
+}
+
+@font-face {
+  font-family: 'Atkinson-Hyperlegible';
+  src: url(assets/fonts/AtkinsonHyperlegible-Italic.ttf);
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Atkinson-Hyperlegible';
+  src: url(assets/fonts/AtkinsonHyperlegible-BoldItalic.ttf);
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url(assets/fonts/Montserrat-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url(assets/fonts/Montserrat-Bold.ttf);
+  font-weight: bold;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+
+	/* default font */
+	font-family: "Atkinson-Hyperlegible", system-ui, Arial;	
+
+	--loading-color: #003B9E;
+	--loading-text: #fff;
+	--clock-text: #fff;
+
+
+}
+
+body, html {
+	width: 1920px;
+	height: 1080px;
+}
+
+/*
+ * Note: While not in full screen some elements may not be placed correctly.
+ * please display on a 1920 x 1080 screen.
+ * */
+
+/* add gears, animations of a loading computer program eg like MS-DOS
+ * to loading scene.*/
+
+.loading {
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 10;
+	display: flex;
+	position: absolute;
+	align-items: center;
+	transition: opacity 1s;
+	justify-content: center;
+    flex-direction: column;
+	background-color: var(--loading-color);
+}
+
+.loading img {
+    width: 250px;
+    animation: icon 0.5s 1s 1  ease-in-out forwards;
+}
+
+@keyframes icon {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(15deg);
+    }
+}
+
+.loading h2 {
+	font-size: 28px;
+	color: var(--loading-text);	
+}
+
+.overlay {
+    position: relative;
+    z-index: 4;
+	pointer-events: none;
+}
+
+.media-player {
+
+}
+
+.chat {
+
+}
+
+.alert-gears {
+   top: 0;
+   position: absolute;
+   translate: 0px -250px;
+   transition: translate 2s;
+
+}
+.alert-gear1, .alert-gear2 {
+    top: 0;
+    width: 246px;
+    position: absolute;
+    animation: rotate 5s 0s infinite linear forwards;
+}
+.alert-gear1 { 
+    left: 520px; 
+}
+.alert-gear2 { 
+    left: 860px;
+    animation-direction: reverse;
+}
+
+.alert-gears svg-img svg g path {
+    fill: #18576A;
+}
+
+@keyframes rotate {
+	0% { rotate: 0deg; }
+	100% { rotate: 360deg; }
+}
+
+.alert {
+   top: 0px;
+   z-index: 3; 
+   left: 640px; /* 796px is the middle of the gaming overlay */
+   padding: 18px;
+   padding-top: 25px;
+   position: absolute;
+   transition: transform 2s;
+   transition-delay: 1s;
+   background-color: #15384e;
+   border: solid 4px #52d6e7;
+   border-radius: 0px 0px 25px 25px;
+   transform: translateY(-300px);
+}
+
+.alert img {
+    width: 300px;
+    margin: auto;
+    display: block;
+    border-radius: 15px;
+}
+
+.alert hr {
+    margin: 15px 0px;
+    border-radius: 50px;
+    border: solid 8px #00182a;
+}
+
+.alert p {
+    color: #fff;
+	font-size: 18px;
+    text-align: center;
+    letter-spacing: 1.2px;
+	font-family: "Montserrat";
+}
+
+/* infobars at the bottom of the overlay, with marquee*/
+.info {
+	z-index: 6;
+	color: #fff;
+	width: 200px;
+	height: 41px;
+	display: flex;
+	position: absolute;
+	overflow-x: hidden;
+	text-overflow: none;
+	align-items: center;
+	font-family: "Montserrat";
+}
+
+.info p {
+	width: 100%;
+	font-size: 20px;
+	text-wrap: nowrap;
+	position: relative;
+	letter-spacing: 1.5px;
+    animation-play-state: running;
+	animation: marquee 18s linear infinite;
+}
+
+@keyframes marquee {
+    0% { transform: translate(0%, 0); }    
+    50% { transform: translate(-180%, 0); }
+    50.001% { transform: translate(180%, 0); }
+    100% { transform: translate(0%, 0); }
+}
+@keyframes marquee-reset {
+    0% { transform: translate(0%, 0); }  
+}
+
+#bits {
+	left: 445px;
+	bottom: 27px;
+}
+
+#followers {
+	left: 775px;
+	bottom: 27px;
+}
+
+#subs {
+	left: 1105px;
+	bottom: 27px;
+}
+
+/* clock widget */
+.clock {
+	top: 12px;
+	z-index: 6;
+	right: 70px;
+	font-size: 18px;
+	position: absolute;
+	color: var(--clock-text);
+	font-family: "Montserrat";
+}

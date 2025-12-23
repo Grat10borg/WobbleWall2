@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en-dk">
+  <head>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1.0"> 
+	<title>Wobblewall</title>
+  	<link rel="shortcut icon" href="assets/icon.png"/>
+	<link href="style.css" rel="stylesheet"/> 
+  </head>
+  <body>
+    <main>
+		<!-- z-index: 10  --!>
+		<div class="loading">
+            <img src="assets/icon-straight.png"> 
+			<h2>Initializing Wobblewall...</h2>
+		</div>
+		<!-- z-index: 5  --!>
+		<img class="overlay" src="images/overlay_game.png">
+		<!-- z-index: 4  --!>
+		<div class="media-player">
+			<div></div>
+		</div>
+		<!-- z-index: 6  --!>
+		<div class="chat"></div>
+		<!-- z-index: 6  --!>
+
+        <!-- alertbox decorations & alertbox proper --!>
+        <div class="alert-gears">
+            <svg-img class="alert-gear1" src="assets/gear_filled.svg"></svg-img>
+            <svg-img class="alert-gear2" src="assets/gear_filled.svg"></svg-img>
+        </div>
+        <div class="alert">
+           <img src="images/robot_stimmies2.webp"> 
+           <hr>
+           <p>Name just followed!</p>
+        </div>
+
+		<!-- z-index: 6  --!>
+		<!-- https://dev.twitch.tv/docs/api/reference list of endpoints --!>
+		<!-- Twitch API endpoint , append text --!>
+		<div class="info" id="followers"
+		meta="channels/followers?first=1&broadcaster_id=config.twitch_id, $user_name just followed!">
+		<p></p></div>
+		<div class="info" id="bits"
+		meta="bits/leaderboard?first=1, $user_name donated $score bits!"><p></p></div>
+		<div class="info" id="subs" 
+		meta="subscriptions?first=1&broadcaster_id=config.twitch_id, $user_name just subscribed!"><p></p></div>
+
+		<!-- z-index: 6  --!>
+		<!-- append text , data formating , append text --!>
+		<div id="#clock" class="clock">,G:i, - CEST (GMT+1)</div>
+	</main>
+  </body>
+  <!-- libs used, twitch api, text-to-speech --!>
+  <script src="lib/comfy.js"></script>
+  <script src="lib/sam.js"></script>
+
+
+  <script src="script/dom.js"></script>
+  <script src="config.js"></script>
+  <script src="index.js"></script>
+</html>

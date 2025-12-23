@@ -1,0 +1,11 @@
+{
+  "name": "WobbleWall2",
+  "version": "1.0.0",
+  "description": "Twitch Overlay for Grat10's Streams",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve -p 3001"
+  },
+  "author": "Grat10",
+  "license": "ISC"
+}
