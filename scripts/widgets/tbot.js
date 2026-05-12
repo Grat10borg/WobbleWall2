@@ -147,5 +147,5 @@ function lurk(user) {
 }
 
 function click() {
-    audio_play("images/clicker.mp3"); 
+    audio_play("assets/clicker.mp3"); 
 }
