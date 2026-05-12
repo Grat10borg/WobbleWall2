@@ -84,6 +84,8 @@ async function message(user, message, command, extra) {
     if (f.subscriber == false) { div.querySelector(".sub").style.display = "none";}
     if (f.broadcaster == false) { div.querySelector(".streamer").style.display = "none";}
     if (users[username].pronouns == false) { div.querySelector(".pronouns").style.display = "none";}
+
+    // add italic text if needed
     if (extra.messageType == "action") { div.querySelector(".text").setAttribute("style", "font-style: italic")} // /me command
 
     // input data for personilazation 
@@ -92,7 +94,9 @@ async function message(user, message, command, extra) {
     div.querySelector(".span .text").innerText = returnMessage;
 
     // add emotes to message
-    div.querySelector(".span .text").innerHTML = addEmotes(div.querySelector(".span .text"), extra);
+    if(settings.chat.emotes_on) {
+        div.querySelector(".span .text").innerHTML = addEmotes(div.querySelector(".span .text"), extra);
+    }
 
     div.style.display = "none";
 

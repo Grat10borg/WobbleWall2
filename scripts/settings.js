@@ -22,11 +22,11 @@ var settings = {
 		raid_msg: "",
 	},
 
-	/* bot that does !lurk or !clip commands */
+	// misc commands
 	tbot: {
 		clip_cmd_on: true,
 		mark_cmd_on: true,
-		click_cmd_on: true,
+		click_cmd_on: true, // WW is actually a secret plot to clicker train Twitch streamers
 		dice_cmd_on: true,
 		lurk_cmd_on: true,
 	},

@@ -27,8 +27,16 @@ setInterval(() => {
 }, 1000 * 60 * 60 * 1) // repeat every hour
 
 // clip the last 30s / ~27s of the stream
-async function clip() { twitchPost("", "clip", "/clips?broadcaster_id="+config.twitch_id); }
-async function mark(desc) { twitchPost(desc, "mark", "/streams/marker"); }
+async function clip() { 
+    if(settings.tbot.clip_cmd_on) {
+        twitchPost("", "clip", "/clips?broadcaster_id="+config.twitch_id); 
+    }
+}
+async function mark(desc) { 
+    if(settings.tbot.mark_cmd_on)  {
+        twitchPost(desc, "mark", "/streams/marker");
+    }
+ }
 
 async function twitchPost(desc, cmd_name, url) {
     http = "https://api.twitch.tv/helix"+url;
