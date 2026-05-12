@@ -206,9 +206,9 @@ function addEmotes(message, extra) {
         //$$.log(`"${newMessage}"`, `"${key}"`);
         //$$.log(newMessage.replaceAll(/[^\d\w\s]/g, "") == key, newMessage.match(key));
         //$$.log(newMessage.replaceAll(/[^\d\w\s]/g, "").trim().length, key.length);
-        $$.log(newMessage);
+        //$$.log(newMessage);
         
-        $$.log(message.innerText, newMessage.replaceAll(/[^\d\w\s]/g, ""), key)
+        //$$.log(message.innerText, newMessage.replaceAll(/[^\d\w\s]/g, ""), key)
         if(newMessage.replaceAll(/[^\d\w\s:]/g, "") == key) {
             emoteImage = `<img class='emote-only' src="${value}"></img>`;
             newMessage = newMessage.replaceAll(key, emoteImage);

@@ -3,6 +3,7 @@ ComfyJS.Init(config.bot_login, config.bot_oauth, config.twitch_login);
 
 ComfyJS.onChat = (user, message, flags, self, extra) => {
     (async () => {
+        $$.log(message, extra);
         chat.message(await getProfile(user, flags, extra), message, false, extra);
     })()
 }
