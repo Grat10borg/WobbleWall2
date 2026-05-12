@@ -27,125 +27,74 @@ setInterval(() => {
 }, 1000 * 60 * 60 * 1) // repeat every hour
 
 // clip the last 30s / ~27s of the stream
-async function clip() {
-    // only clip if token is valid.
-    // POST call to make and return a twitch clip
-    let clip_resp = await fetch(
-    "https://api.twitch.tv/helix/clips?broadcaster_id="
-    +config.twitch_id,{
+async function clip() { twitchPost("", "clip", "/clips?broadcaster_id="+config.twitch_id); }
+async function mark(desc) { twitchPost(desc, "mark", "/streams/marker"); }
+
+async function twitchPost(desc, cmd_name, url) {
+    http = "https://api.twitch.tv/helix"+url;
+    if(desc == "" || desc == undefined) {desc = "description unset."}
+
+    let cmd_resp = await fetch(http,{
         method: "POST",
         headers: {
             Authorization: "Bearer " + config.my_api_token,
             "Client-ID": config.client_id,
             "Content-Type": "application/json"
-    },}) 
+        },
+        body: JSON.stringify({"user_id": config.twitch_id, "description": desc})
+    }) 
     .then((respon) => respon.json())
     .then((respon) => {
         // return Twitch's response
         console.log(respon);
         return respon; 
     })
-    // error handling for fetch
     .catch((err) => {$$.log(err)})
 
     // error handling for responses
-    if(clip_resp["error"] == "Not Found")  {
-        $$.err("⚠ You cannot clip an Offline Channel!! :<");
-    }
-    if(clip_resp["error"] == "Unauthorized") {
-        $$.err("⚠ The passed Oauth token, "+
-        "or lack there of was invalid :<");
-    }
-    if(clip_resp == undefined) {
-        $$.err("Error, clip response was nothing");
-    }
+    if(cmd_resp["error"] == "Not Found")  { $$.err(`⚠ You cannot ${cmd_name} an Offline Channel!! :<`); }
+    if(cmd_resp["error"] == "Unauthorized") { $$.err(`⚠ The passed Oauth token, or lack there of was invalid :<`); }
+    if(cmd_resp == undefined) { $$.err(`Error, ${cmd_name} response was nothing`); }
     
     // if response was as expected
-    else if(clip_resp["data"][0]["id"] != null) {
+    else if(cmd_resp["data"][0]["id"] != null) {
         // save "slug" of the returned clip link
         let clip_id = clip_resp["data"][0]["id"];
 
-        // creates a stream marker of the clip-taking
-        this.mark("clip created here.");
-
-        // save clips
-        cached.clips.push(clip_resp);
-        cached.clip_count++;
+        if(cmd_name == "clip") {
+            // creates a stream marker at the time of clip-taking
+            twitchPost("clip created here.", "mark", "/streams/marker");
+        }
 
         ComfyJS.Say("Clipped: https://clips.twitch.tv/"+clip_id);
         $$.log(clip_resp["data"][0]["edit_url"]);
     }
-    else {
-        $$.err("Unexpected response:", clip_resp);
-    }
+    else { $$.err("Unexpected response:", cmd_resp); }
 }
 
-
-// markiplier
-async function mark(desc) {
-
-    if(desc == "" || desc == undefined)
-        desc = "no description given.";
-
-    // POST call to make and return a twitch clip
-    let mark_resp = await fetch(
-    "https://api.twitch.tv/helix/streams/marker"
-    +config.client_id,{
-        method: "POST",
-        headers: {
-            Authorization: "Bearer " + config.my_api_token,
-            "Client-ID": config.client_id,
-            "Content-Type": "application/json",
-    },
-    // pass a user id and a description for marker desc
-    body: JSON.stringify({"user_id": config.twitch_id,
-        "description": desc})
-    }) 
-    .then((respon) => respon.json())
-    .then((respon) => {
-        return respon;
-    })
-    // error handling for fetch
-    .catch((err) => {$$.log(err)}) 
-    
-    // error handling for responses
-    if(mark_resp["error"] == "Not Found") {
-        $$.err("⚠ You cannot mark an Offline Channel!! :<");
-    } 
-    if(clip_resp["error"] == "Unauthorized") {
-        $$.err("⚠ The passed Oauth token, "+
-        "or lack there of was invalid :<");
-    } 
-    if(mark_resp == undefined) {
-        $$.err("Error, mark response was nothing");
-    }
-
-    // if response is as expected
-    else if(mark_resp["data"][0]["id"] != null) {
-        cached.marks.push(mark_resp);
-        cached.mark_count++;
-    }
-    else {
-        $$.err("unexpected response:", mark_resp);
-    } 
-}
 
 /* for fun functions */
 
 function dice(max) {
-    if(isNaN(max)) {
-		ComfyJS.Say("please give a NUMBER :)");
-        return;
+    if(settings.tbot.dice_cmd_on) {
+        if(isNaN(max)) {
+            ComfyJS.Say("please give a NUMBER :)");
+            return;
+        }
+        // return a random number between 0 and max 
+        ComfyJS.Say("The Dice rolls..."+
+        Math.floor(Math.random() * max + 1) + "!!");
     }
-	// return a random number between 0 and max 
-    ComfyJS.Say("The Dice rolls..."+
-    Math.floor(Math.random() * max + 1) + "!!");
 }
 
 function lurk(user) {
-	ComfyJS.Say("okey! please enjoy the stream @"+user+"!! :3");
+    if(settings.tbot.lurk_cmd_on) { 
+	    ComfyJS.Say("okey! please enjoy the stream @"+user+"!! :3");
+    }
 }
 
 function click() {
-    audio_play("assets/clicker.mp3"); 
+    if(settings.tbot.click_cmd_on) { 
+        audio_play("assets/clicker.mp3"); 
+    }
 }
