@@ -24,8 +24,8 @@ const $$ = {
 
 // Http request function specify Twitch if using twitch tokens
 async function api(http, isTwitch) {
-  if (isTwitch == true || isTwitch != undefined) {
-    const respon = await fetch(`${http}`, {
+  if (isTwitch == true) {
+    const respon = await fetch(http, {
       headers: {
         Authorization: "Bearer " + config.my_api_token,
         "Client-ID": config.client_id, 
@@ -39,7 +39,6 @@ async function api(http, isTwitch) {
       .catch((err) => {
         // Print Error if any. And return 0
         $$.log(err);
-        return err;
       });
     return respon;
   } else {
@@ -52,7 +51,6 @@ async function api(http, isTwitch) {
       .catch((err) => {
         // Print Error if any. And return 0
         $$.log(err);
-        return err;
       });
     return respon;
   }

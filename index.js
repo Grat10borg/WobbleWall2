@@ -1,10 +1,8 @@
-
 // fetcher only updates at a certain interval, and returns the newest one when queried.
 // if "" is sent query saved API calls
 let http_calls = {};
 async function fetcher(httpcall) {
     let href = "https://api.twitch.tv/helix/";
-    $$.log(await $$.api("https://api.twitch.tv/helix/eventsub/subscriptions", true));
     
     // fetch initial request, and save it if queried again / by another widget.
     if(Object.keys(http_calls).includes(httpcall) == false && httpcall != "") {
@@ -24,116 +22,219 @@ async function fetcher(httpcall) {
         // go through each saved request and refresh them
         Object.keys(http_calls).forEach(async request => {
             http_calls[request] = await $$.api(href+request, true);
-        });
+        })
     }
-
 }
+
 setInterval(() => { fetcher(""); }, 1000 * 15); // refresh every 15 seconds
 
-// Initializing Comfy.JS, twitch library to get some specific harder to make 
-ComfyJS.Init(config.bot_login, config.bot_oauth, config.twitch_login);
+/* Get 3rd-party emotes */
+let third_party_emotes = {};
+;(async () => {
+    // 7TV, BetterTV, BetterTV Global, FrankerfaceZ
+    let TV = await $$.api(`https://7tv.io/v3/users/twitch/${config.twitch_id}`, false);
+    let BTV = await $$.api(`https://api.betterttv.net/3/cached/users/twitch/${config.twitch_id}`, false);
+    let BTVG = await $$.api(`https://api.betterttv.net/3/cached/emotes/global`, false);
+    let Frank = await $$.api(`https://api.frankerfacez.com/v1/room/${config.twitch_login}`, false);
+    
+    // 7TV, BetterTV, FrankerfaceZ sorted into an object.
+    TV.emote_set.emotes.forEach(e => { third_party_emotes[e.name] = `https:${e.data.host.url}/4x.webp`; });
+    [ ...BTVG, ...BTV.channelEmotes, ...BTV.sharedEmotes].forEach
+    (e => { third_party_emotes[e.code] = `https://cdn.betterttv.net/emote/${e.id}/3x`; });
 
+    let set = Frank.room.set;
+    Frank.sets[set].emoticons.forEach(e => { 
+        // choose animated version if available.
+        if (e.animated) {
+            third_party_emotes[e.name] = e.animated[4]; 
+        } else {
+            third_party_emotes[e.name] = e.urls[4]; 
+        }
+    });
+
+})()
+
+
+// fetch profile pictures from the twitch api
+let users = {};
+async function getProfile(username, flags, extra) {
+    if (users[username]) {
+        return users[username];
+    }
+
+	// request profile picture
+    let request = await $$.api(
+	"https://api.twitch.tv/helix/users?login=" + username.toLowerCase(), true);
+
+    let pronouns;
+    let pronoun_primary;
+    let pronoun_secondary;
+
+    // this api is horried
+    // instead of returning the expected she/it
+    // its instead giving lookup keys, which aren't available anywhere
+    // so nowww i have to have two ginormous objects for current and past-tense
+    // yay.
+    let twitnouns = await fetch("https://api.pronouns.alejo.io/v1/users/"+username.toLowerCase());
+
+    if(twitnouns.status == 404) {
+        pronouns = false;
+    } 
+    if (twitnouns.status == 200) {
+
+        twitnouns = await twitnouns.json();
+
+        let pronouns_obj =  {
+            any: ["any"],
+            other: ["other"],
+            eem: ["e", "em"],
+            vever: ["ve", "ver"],
+            xexem: ["xe", "xem"],
+            itits: ["it", "its"],
+            aeaer: ["ae", "aer"],
+            hehim:  ["he", "him"],
+            ziehir: ["zir", "hir"],
+            sheher: ["she", "her"],
+            perper: ["per", "per"],
+            faefaer: ["fae", "faer"],
+            theythem: ["they", "then"]
+        }
+        
+        if (twitnouns["alt_pronoun_id"] != undefined && twitnouns["alt_pronoun_id"] != "") {
+            pronoun_primary = pronouns_obj[twitnouns["pronoun_id"]][0];
+            pronoun_secondary = pronouns_obj[twitnouns["alt_pronoun_id"]][1];
+
+            pronouns = [pronoun_primary, pronoun_secondary].join("/"); 
+        } else { // incase of any or other they just get "" appended.
+            pronouns = pronouns_obj[twitnouns["pronoun_id"]].join("/");
+
+            pronoun_primary = pronouns.split("/")[0];
+            pronoun_secondary = pronouns.split("/")[1];
+        }
+    }
+
+
+    // used for approval for higher perm command usage
+    let perms = false;
+    $$.log(flags);
+    if(flags.broadcaster || flags.mod || flags.vip) { perms = true; }
+
+	// make shorter "filepath" version 
+	let twitch = request["data"][0];
+
+	// log user data
+	users[username] = {
+        // pronouns, twitch pronouns & pronounDB
+        "pronouns": pronouns,
+        "pronouns_primary": pronoun_primary,
+        "pronouns_secondary": pronoun_secondary,
+
+        // twitch infomation
+		"profile_img": twitch["profile_image_url"],
+		"offline_img": twitch["offline_image_url"],
+		"displayName": extra.displayName,
+		"desc": twitch["description"],
+		"color": extra.userColor,
+		"login": extra.channel,
+		"id": extra.userId,
+
+		// status
+		"broadcaster_type": twitch["broadcaster_type"],
+		"badges": extra.userBadges,
+		"extra": extra,
+		"flags": flags,
+        "perms": perms,
+
+        // colors
+        palette: await (async () => {
+            return new Promise((resolve) => {
+                Vibrant.from(twitch["profile_image_url"]).getPalette().then(resolve);
+            })
+        })()
+
+	}
+
+	// return profile src
+	return users[username];
+}
+
+// add Twitch emotes with the help of the API
+function addEmotes(message, extra) {
+    let emotes;
+    
+    let newMessage = message.innerText;
+    if(extra["userState"]["emotes-raw"] != null) {
+        if(extra["userState"]["emotes-raw"].match("/")) {
+            emotes = extra["userState"]["emotes-raw"].split("/");	
+        } else {
+            emotes = [extra["userState"]["emotes-raw"]];
+        } 
+
+        // twitch emotes
+        emotes.map((emotes) => {
+            let res = emotes.split(":");
+            let locations = res[1].split(",");
+            let indexs = locations[0].split("-");
+
+            // finds emote name in message
+            let emoteName = message.innerText.trim().substring(
+                parseInt(indexs[0]),
+                parseInt(indexs[1]) + 1
+            )
+            // makes direct link to emote image
+            let emoteImage;	
+            // add SRC and classes
+            if(extra.isEmoteOnly == true) {
+                emoteImage = "<img class='emote-only'"+ 
+                "src='https://static-cdn.jtvnw.net/emoticons/v2/"
+                + res[0] + "/default/dark/3.0'></img>";
+            } else {
+                emoteImage = "<img class='emote'"+ 
+                "src='https://static-cdn.jtvnw.net/emoticons/v2/"
+                + res[0] + "/default/dark/3.0'></img>";
+            }
+
+            newMessage = newMessage.replaceAll(emoteName, emoteImage);	
+        })
+    }
+
+    $$.log(newMessage);
+    //$$.log(extra.isEmoteOnly);
+
+    for (let [key, value] of Object.entries(third_party_emotes)) {
+        // if its only an a third party emote in the message
+        //$$.log(`"${newMessage}"`, `"${key}"`);
+        //$$.log(newMessage.replaceAll(/[^\d\w\s]/g, "") == key, newMessage.match(key));
+        //$$.log(newMessage.replaceAll(/[^\d\w\s]/g, "").trim().length, key.length);
+        $$.log(newMessage);
+        
+        $$.log(message.innerText, newMessage.replaceAll(/[^\d\w\s]/g, ""), key)
+        if(newMessage.replaceAll(/[^\d\w\s:]/g, "") == key) {
+            emoteImage = `<img class='emote-only' src="${value}"></img>`;
+            newMessage = newMessage.replaceAll(key, emoteImage);
+        }
+        if(newMessage.match(key)) {
+            emoteImage = `<img class='emote' src="${value}"></img>`;
+            newMessage = newMessage.replaceAll(key, emoteImage);
+        }
+    }
+    // third party emotes
+    
+
+	return newMessage;
+}
+
+/* -- Widgets -- */
 // Loading code.
 setTimeout(() =>  {
 	$$.query(".loading").setAttribute("style", "opacity: 0;");
-}, 1500); 
+}, 1500) 
 
-
-
-// Alertbox code
-ComfyJS.onCommand = (user, command, message, flags, extra) => {
-    alert( user+ " followed!", "robot_headpats.webp");
-}
-ComfyJS.onRaid = (user, viewers, extra) => {
-    alert(user + " just raided with " + viewers +
-        " viewers! welcome :3", "robot_stimmies2.webp");
-}
-ComfyJS.onCheer = (user, message, bits, flags, extra) => {
-    alert(user + " just donated " + bits + "<br>"
-    + message, "robot_stimmies2.webp");
-}
-ComfyJS.onSub = (user, message, subTierInfo, extra) => {
-    alert(user + " subscribed at " + subTierInfo +
-    "! thank youu <br>" + message, "robot_headpats.webp");
-}
-ComfyJS.onResub = (user, message, streamMonths, cumulativeMonths, subTierInfo, extra) => {
-    alert(user + " resubscribed at " + subTierInfo +
-    " for "+ cumulativeMonths +"! thank youu <br>" + message, "robot_headpats.webp");
-}
-ComfyJS.onSubGift = (gifterUser, streakMonths, recipientUser, senderCount, subTierInfo, extra) => {
-    alert(gifterUser + " just gifted " + recipientUser +
-    " a tier" + subTierInfo + " sub! woagh,, :O", "robot_stimmies2.webp");
-}
-ComfyJS.onSubMysteryGift = (gifterUser, numOfSubs, senderCount, subTierInfo, extra) => {
-    alert(gifterUser + " just gifted " + numOfSubs  +
-    " tier" + subTierInfo + " subs the heck,,,", "robot_headpats.webp");
-}
-ComfyJS.onGiftSubContinue = (user, sender, extra) => {}
-ComfyJS.onHypeTrain = (level, progressToNextLevel, goalToNextLevel, 
-                       totalHype, timeRemainingInMS, extra) => {
-    // Add more to this
-    alert("Hype Train: level " + level + " yall,,, the fuck, <br> do make" 
-    +"special graphics for this sometime Grat, -past grat10", "robot_headpats.webp");
-}
-
-
-// toggle alert on when called, and toggle it away again after awhile
-function alert(string, img_src) {
-    let box = $$.query(".alert");
-    let gears = $$.query(".alert-gears");
-
-    box.setAttribute("style", "transform: translateY(0px)");
-    gears.setAttribute("style", "translate: 0px -70px");
-
-    box.children[0].src = "images/"+img_src;
-    box.children[2].innerText = string;
-
-    setTimeout(() => {
-        box.removeAttribute("style", "transition-delay: 0s;");
-        gears.setAttribute("style", "translate: 0px -250px; transition-delay: 1s;");
-    }, 8000);
-}
-
-// Info fields code.
-// fetch meta field then do an API call to twitch and place the first
-// returned entry in as a available field for formatting.
-fillInfo(); // fill info on startup, then update ever 20 seconds
-setInterval(() => { fillInfo(); }, 1000 * 20 );
-
-let info_fields = {};
-function fillInfo() {
-	$$.query_all(".info").forEach(async (info_elem) => {
-		let info_options = info_elem.getAttribute("meta").split(","); 
-		info_options[0] = info_options[0].replace(
-		"config.twitch_id", config.twitch_id);
-		let api_res = await fetcher(info_options[0]);
-		
-		// typically you just want the first entry. 
-		// eg: newest follower, newest sub.
-		// highest on the leaderboard.
-		let text = info_options[1];
-		for (let [key, value] of Object.entries(api_res.data[0])) {
-			text = text.replaceAll("$"+key, value)	
-		}
-		info_elem.children[0].innerText = text;
-	});
-}
-
-
-// Clock code
-// get the innertext of the clock seperated by commas.
-// then put pretext make a date format it, then aftertext
-let clock_options = $$.query(".clock").innerText.split(",");
-setInterval(() => {
-	$$.query(".clock").innerText = clock_options[0] + 
-	$$.date(new Date(), clock_options[1]) + clock_options[2];
-}, 1000);
-
-
+/* random extra functions */
 
 /* make*/
 /* check for special elements */
-(async () => {
+function svg_img(element) {
     // searches for <svg-img> and uses src="" to fetch and fill it with
     // the requested img (hopefully an actual SVG file)
     let svgs = $$.query_all("svg-img");
@@ -149,5 +250,9 @@ setInterval(() => {
             svgs[i].innerHTML = res;
         })()
     }
-})();
+}
+
+;(async () => {
+    svg_img($$);
+})()
 

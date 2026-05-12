@@ -9,22 +9,52 @@
   </head>
   <body>
     <main>
-		<!-- z-index: 10  --!>
+		<!-- z-index: 10  -->
 		<div class="loading">
             <img src="assets/icon-straight.png"> 
 			<h2>Initializing Wobblewall...</h2>
 		</div>
-		<!-- z-index: 5  --!>
-		<img class="overlay" src="images/overlay_game.png">
-		<!-- z-index: 4  --!>
+		<!-- z-index: 5  -->
+		<img class="overlay" style="z-index: 7;" src="images/overlay_game_top.png">
+		<img class="overlay" src="images/overlay_game_gearless.png">
+		<!-- z-index: 4  -->
 		<div class="media-player">
 			<div></div>
 		</div>
-		<!-- z-index: 6  --!>
-		<div class="chat"></div>
-		<!-- z-index: 6  --!>
 
-        <!-- alertbox decorations & alertbox proper --!>
+        <div id="displayer" class="display">
+            <div>
+
+            </div>	
+		</div>
+
+		<div id="music"></div>
+        <!-- animate on beat, rotate every beat, amount moved, reversed -->
+        <div id="beat-gear-1" class="music-gear on-beat"
+        meta="2/rotate/30/deg" style="transform: rotate(36deg);">
+            <svg-img src="images/grat10_gear.svg">
+        </div>
+        <div id="beat-gear-2" class="music-gear on-beat"
+        meta="1/rotate/30/deg" style="transform: rotate(30deg);">
+            <svg-img src="assets/gear.svg">
+        </div>
+        <div id="beat-gear-3" class="music-gear on-beat"
+        meta="1/rotate/30/deg" style="transform: rotate(13deg);">
+            <svg-img src="assets/gear_filled.svg">
+        </div>
+        <div id="beat-gear-4" class="music-gear on-beat"
+        meta="1/rotate/30/deg" style="transform: rotate(25deg);">
+            <svg-img src="assets/gear.svg">
+        </div>
+        <div id="beat-gear-5" class="music-gear on-beat"
+        meta="2/rotate/30/deg" style="transform: rotate(20deg);">
+            <svg-img src="assets/gear.svg">
+        </div>
+		<!-- z-index: 6  -->
+		<div class="gaming-chat" id="chat"></div>
+		<!-- z-index: 6  -->
+
+        <!-- alertbox decorations & alertbox proper -->
         <div class="alert-gears">
             <svg-img class="alert-gear1" src="assets/gear_filled.svg"></svg-img>
             <svg-img class="alert-gear2" src="assets/gear_filled.svg"></svg-img>
@@ -32,31 +62,45 @@
         <div class="alert">
            <img src="images/robot_stimmies2.webp"> 
            <hr>
-           <p>Name just followed!</p>
+           <p></p>
         </div>
 
-		<!-- z-index: 6  --!>
-		<!-- https://dev.twitch.tv/docs/api/reference list of endpoints --!>
-		<!-- Twitch API endpoint , append text --!>
+		<!-- z-index: 6  -->
+		<!-- https://dev.twitch.tv/docs/api/reference list of endpoints -->
+		<!-- Twitch API endpoint , append text -->
 		<div class="info" id="followers"
-		meta="channels/followers?first=1&broadcaster_id=config.twitch_id, $user_name just followed!">
+		meta="channels/followers?broadcaster_id=config.twitch_id&first=1, $user_name just followed!">
 		<p></p></div>
-		<div class="info" id="bits"
-		meta="bits/leaderboard?first=1, $user_name donated $score bits!"><p></p></div>
+		<div class="info" id="bits" 
+		meta="streams?first=1&user_login=glorpi10, playing: $game_name"><p></p></div>
 		<div class="info" id="subs" 
 		meta="subscriptions?first=1&broadcaster_id=config.twitch_id, $user_name just subscribed!"><p></p></div>
 
-		<!-- z-index: 6  --!>
-		<!-- append text , data formating , append text --!>
-		<div id="#clock" class="clock">,G:i, - CEST (GMT+1)</div>
+		<!-- z-index: 6  -->
+		<!-- append text , data formating , append text -->
+		<div id="clock" class="clock">,G:i, - CEST (GMT+1)</div>
 	</main>
+      <!-- libs -->
+      <script src="scripts/lib/comfy.js"></script>
+      <script src="scripts/lib/sam.js"></script>
+      <script src="scripts/lib/beat-beat.js"></script>
+      <script src="scripts/lib/node-vibrant.js"></script>
+      <script src="https://www.youtube.com/iframe_api"></script>
+
+      <!-- startup -->
+      <script src="scripts/dom.js"></script>
+      <script src="scripts/settings.js"></script>
+      <script src="scripts/config.js"></script>
+      <script src="index.js"></script>
+
+      <!-- widgets -->
+      <script src="scripts/widgets/alertbox.js"></script>
+      <script src="scripts/widgets/displayer.js"></script>
+      <script src="scripts/widgets/info_field.js"></script>
+      <script src="scripts/widgets/clock.js"></script>
+      <script src="scripts/widgets/chat.js"></script>
+      <script src="scripts/widgets/musicbox.js"></script>
+      <script src="scripts/widgets/tbot.js"></script>
+      <script src="scripts/comfy_handler.js"></script>
   </body>
-  <!-- libs used, twitch api, text-to-speech --!>
-  <script src="lib/comfy.js"></script>
-  <script src="lib/sam.js"></script>
-
-
-  <script src="script/dom.js"></script>
-  <script src="config.js"></script>
-  <script src="index.js"></script>
 </html>

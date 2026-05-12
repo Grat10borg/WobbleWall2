@@ -25,6 +25,17 @@
 }
 
 @font-face {
+  font-family: 'Atkinson-Hyperlegible-Mono';
+  src: url(assets/fonts/AtkinsonHyperlegible-Mono-Regular.ttf);
+}
+
+@font-face {
+  font-family: 'Atkinson-Hyperlegible-Mono';
+  src: url(assets/fonts/AtkinsonHyperlegible-Mono-SemiBold.ttf);
+  font-weight: bold;
+}
+
+@font-face {
   font-family: 'Montserrat';
   src: url(assets/fonts/Montserrat-Regular.ttf);
 }
@@ -49,10 +60,15 @@
 
 }
 
-body, html {
-	width: 1920px;
-	height: 1080px;
+body, html, .overlay {
+    position: absolute;
+    width: 100vw;
+    height: calc(100vw / calc(1920 / 1080));
+	pointer-events: none;
+    z-index: 4;
+    overflow-y: hidden;
 }
+
 
 /*
  * Note: While not in full screen some elements may not be placed correctly.
@@ -75,6 +91,7 @@ body, html {
 	justify-content: center;
     flex-direction: column;
 	background-color: var(--loading-color);
+    pointer-events: none;
 }
 
 .loading img {
@@ -97,19 +114,233 @@ body, html {
 	color: var(--loading-text);	
 }
 
-.overlay {
-    position: relative;
-    z-index: 4;
-	pointer-events: none;
-}
 
 .media-player {
 
 }
 
-.chat {
+/* Chat */
 
+#chat {
+   width: 333px;
+    height: 373px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    position: absolute;
+    transition: opacity 0.5s;
 }
+
+.chat-clear {
+    opacity: 0;
+}
+
+.gaming-chat {
+    top: 92px;
+    right: 7px;
+    z-index: 8;
+}
+
+.intro-chat {
+    z-index: 8;
+    top: 351px;
+    right: 274px;
+}
+
+#chatbox {
+   margin: 0px 20px 0px 20px;
+}
+
+.lower-line {
+    --user-color: black;
+
+    display: flex;
+    font-size: 15px;
+    margin-top: 22px;
+    font-family: "Atkinson-Hyperlegible-Mono";
+}
+
+.lower-line .img {
+    --pfp-size: 40px;
+
+    /*! top: 5px; */
+    left: -2px;
+    z-index: 1;
+    position: relative;
+    border-radius: 100%;
+    background-size: cover;
+    min-width: var(--pfp-size);
+    min-height: var(--pfp-size);
+    max-height: var(--pfp-size);
+    border: solid 4px var(--user-color);
+    background-color: var(--user-color); 
+}
+
+.lower-line .span {
+    display: flex;
+    overflow-wrap: anywhere;
+    text-wrap: wrap;
+    margin-left: 2px;
+    min-width: 120px;
+    font-weight: bold;
+    border-radius: 25px;
+    letter-spacing: 0.5px;
+    background-color: #e7edf1;
+    color: color-mix(in oklab, var(--user-color) 80%, black); 
+}
+
+#chatbox .right {
+    margin-left: 5px;
+}
+
+#chatbox .text {
+    position: relative;
+    margin-right: 15px;
+    top: -13px;
+    left: 5px;
+}
+
+
+.text .emote {
+    vertical-align: middle;
+    height: 2em;
+}
+
+.text .emote-only {max-height: 2.5em}
+#chatbox .text:has(.emote-only) {top: -5px}
+
+.upper-line {
+    left: -8px;
+    top: -15px;
+    color: white;
+    display: flex;
+    width: fit-content;
+    position: relative;
+    height: min-content;
+    letter-spacing: 0.8px;
+    font-size: 12px;
+}
+
+.username, .pronouns {
+    padding: 5px 15px;
+    background-color: #132a3d;
+    border-radius: 15px;
+    display: flex;
+    gap: 3px;
+}
+
+.mod, .streamer, .vip, .sub {
+    display: flex;
+    align-items: center;
+}
+
+.pronouns {
+    margin-left: 5px;
+}
+
+.username svg {
+    width: 1.2em;
+    height: 1.2em;
+    translate: 0.4em 0px;
+}
+
+.mod path { fill: #17DBCE}
+.vip path { fill: #ce04f6 }
+.sub path { fill: #077dfb}
+.streamer path { fill: #E2855D}
+
+/* Music elements */
+.music-gear {
+    --gear-color: #09273c;
+
+    z-index: 6;
+    position: absolute;
+    transition: all 0.1s;
+    width: 300px; /* just to stop it filling the entire screen while working */
+}
+.music-gear-end { 
+    --rotation: 0;
+    /* this is used for when the song is done and the gears has to spin back to
+     * their original rotation */
+    transition-duration: 5s;
+}
+
+.music-gear svg-img { display: flex; }
+.music-gear path { fill: var(--gear-color); }
+
+/* music gear positions */
+#beat-gear-1 {
+    --gear-color: #082539;
+
+    width: 245px;
+    bottom: -6%;
+    left: -3.3%;
+}
+#beat-gear-2 {
+    --gear-color: #082539;
+
+    width: 188px;
+    bottom: -10%;
+    left: 9.7%;
+}
+#beat-gear-3 {
+    --gear-color: #132A3D;
+
+    width: 209px;
+    bottom: -12.5%;
+    left: 69.7%; /* hah, funny numberrr!! [gets hit by a truck]*/
+}
+#beat-gear-4 {
+    --gear-color: #132A3D;
+
+    width: 120px;
+    bottom: 16%;
+    left: 84.4%; 
+}
+#beat-gear-5 {
+    --gear-color: #0F2232;
+
+    width: 340px;
+    bottom: 19%;
+    left: 88.9%; 
+}
+/* intro screen gears */
+#beat-gear-6 {
+    --gear-color: #BACBC9;
+
+    width: 355px;
+    bottom: 18%;
+    left: -5.9%; 
+}
+#beat-gear-7 {
+    --gear-color: #90cbc4;
+
+    width: 432px;
+    bottom: 68%;
+    left: 2%; 
+}
+#beat-gear-8 {
+    --gear-color: #7E9593;
+
+    width: 306px;
+    bottom: 72.9%;
+    left: 25%; 
+}
+#beat-gear-9 {
+    --gear-color: #CEE2E0;
+
+    width: 314px;
+    bottom: 82.4%;
+    left: 72.7%; 
+}
+#beat-gear-10 {
+    --gear-color: #BACBC9;
+
+    width: 207px;
+    bottom: 60.6%;
+    left: 91.3%; 
+}
+
+/* Alertbox */
 
 .alert-gears {
    top: 0;
@@ -118,15 +349,18 @@ body, html {
    transition: translate 2s;
 
 }
+
 .alert-gear1, .alert-gear2 {
     top: 0;
     width: 246px;
     position: absolute;
     animation: rotate 5s 0s infinite linear forwards;
 }
+
 .alert-gear1 { 
     left: 520px; 
 }
+
 .alert-gear2 { 
     left: 860px;
     animation-direction: reverse;
@@ -196,6 +430,7 @@ body, html {
 	font-size: 20px;
 	text-wrap: nowrap;
 	position: relative;
+    text-shadow: black 4px 4px;
 	letter-spacing: 1.5px;
     animation-play-state: running;
 	animation: marquee 18s linear infinite;
@@ -228,11 +463,78 @@ body, html {
 
 /* clock widget */
 .clock {
-	top: 12px;
-	z-index: 6;
-	right: 70px;
-	font-size: 18px;
 	position: absolute;
 	color: var(--clock-text);
 	font-family: "Montserrat";
 }
+
+#clock {
+	top: 12px;
+	z-index: 6;
+	right: 70px;
+	font-size: 18px;
+}
+#clock2 {
+    top: 41px;
+    z-index: 8;
+    right: 1541px;
+    font-size: 28px;
+}
+#clock3 {
+    bottom: 47px;
+    z-index: 8;
+    right: 621px;
+    font-size: 28px;
+}
+
+/* tell displayer to fill newly given space when chat is hidden*/
+.display-fill {
+	transition-duration: 1s;
+	transition: width;
+	width: 100%;
+}
+
+/* content displayer that comes down */
+.display div {
+	height: 980px;
+	width: 1600px;
+
+	z-index: 1;
+	position: absolute;
+	left: 0.3%;
+	top: 0.5%;
+
+	display: flex;
+	justify-content: center;
+	background: var(--displayer-bg);
+	
+	transform: translateY(-100%);
+	transition: ease 4s;
+
+}
+
+#displayer-inner {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+    background: rgba(0,24,42,160);
+}
+
+
+/* make sure to make rounding similar to overlay pngs rounding */
+#displayer-inner iframe {
+	width: 95%;
+	height: 95%;
+	border-radius: 15px;
+}
+
+.display .disp-show {
+	transform: translateY(0);
+	transform-origin: top;
+}
+
+.display .disp-clear {
+	transform: translateY(-100%);
+	transform-origin: bottom;
+}
+

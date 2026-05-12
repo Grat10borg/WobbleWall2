@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en-dk">
+  <head>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1.0"> 
+	<title>Wobblewall</title>
+  	<link rel="shortcut icon" href="assets/icon.png"/>
+	<link href="style.css" rel="stylesheet"/> 
+  </head>
+  <body>
+    <main>
+		<!-- z-index: 10  -->
+		<div class="loading">
+            <img src="assets/icon-straight.png"> 
+			<h2>Initializing Wobblewall...</h2>
+		</div>
+		<!-- z-index: 5  -->
+		<img class="overlay" style="z-index: 7;" src="images/intro_top.png">
+		<img class="overlay" src="images/intro_gearless.png">
+
+		<!-- z-index: 4  -->
+        <!-- animate on beat, rotate every beat, amount moved, reversed -->
+        <div id="beat-gear-6" class="music-gear on-beat"
+        meta="2/rotate/30/deg" style="transform: rotate(30deg);">
+            <svg-img src="assets/gear.svg">
+        </div>
+        <div id="beat-gear-7" class="music-gear on-beat"
+        meta="1/rotate/30/deg" style="transform: rotate(30deg);">
+            <svg-img src="assets/gear.svg">
+        </div>
+        <div id="beat-gear-8" class="music-gear on-beat"
+        meta="1/rotate/30/deg" style="transform: rotate(13deg);">
+            <svg-img src="assets/gear.svg">
+        </div>
+        <div id="beat-gear-9" class="music-gear on-beat"
+        meta="1/rotate/30/deg" style="transform: rotate(25deg);">
+            <svg-img src="assets/gear.svg">
+        </div>
+        <div id="beat-gear-10" class="music-gear on-beat"
+        meta="2/rotate/30/deg" style="transform: rotate(20deg);">
+            <svg-img src="assets/gear.svg">
+        </div>
+		<!-- z-index: 8  -->
+		<div id="chat" class="intro-chat"></div>
+		<!-- z-index: 6  -->
+        <!-- alertbox decorations & alertbox proper -->
+        <div class="alert-gears">
+            <svg-img class="alert-gear1" src="assets/gear_filled.svg"></svg-img>
+            <svg-img class="alert-gear2" src="assets/gear_filled.svg"></svg-img>
+        </div>
+        <div class="alert">
+           <img src="images/robot_stimmies2.webp"> 
+           <hr>
+           <p></p>
+        </div>
+
+		<!-- z-index: 6  -->
+		<!-- append text , data formating , append text -->
+		<div id="clock2" class="clock">,G:i, - CEST (GMT+1)</div>
+	</main>
+  </body>
+  <!-- libs -->
+  <script src="scripts/lib/comfy.js"></script>
+  <script src="scripts/lib/sam.js"></script>
+  <script src="scripts/lib/beat-beat.js"></script>
+  <script src="scripts/lib/node-vibrant.js"></script>
+
+  <!-- startup -->
+  <script src="scripts/dom.js"></script>
+  <script src="scripts/settings.js"></script>
+  <script src="scripts/config.js"></script>
+  <script src="index.js"></script>
+
+  <!-- widgets -->
+  <script src="scripts/widgets/alertbox.js"></script>
+  <script src="scripts/widgets/info_field.js"></script>
+  <script src="scripts/widgets/clock.js"></script>
+  <script src="scripts/widgets/chat.js"></script>
+  <script src="scripts/widgets/musicbox.js"></script>
+  <script src="scripts/widgets/tbot.js"></script>
+  <script src="scripts/comfy_handler.js"></script>
+  <script>
+      // autoplaying a song 
+      setTimeout(() => {play_music();}, 1000);
+  </script>
+</html>

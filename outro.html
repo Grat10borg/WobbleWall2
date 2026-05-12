@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en-dk">
+  <head>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1.0"> 
+	<title>Wobblewall</title>
+  	<link rel="shortcut icon" href="assets/icon.png"/>
+	<link href="style.css" rel="stylesheet"/> 
+  </head>
+  <body>
+    <main>
+		<!-- z-index: 10  -->
+		<div class="loading">
+            <img src="assets/icon-straight.png"> 
+			<h2>Initializing Wobblewall...</h2>
+		</div>
+		<!-- z-index: 5  -->
+		<img class="overlay" src="images/outro.png">
+		<!-- z-index: 6  -->
+        <!-- alertbox decorations & alertbox proper -->
+        <div class="alert-gears">
+            <svg-img class="alert-gear1" src="assets/gear_filled.svg"></svg-img>
+            <svg-img class="alert-gear2" src="assets/gear_filled.svg"></svg-img>
+        </div>
+        <div class="alert">
+           <img src="images/robot_stimmies2.webp"> 
+           <hr>
+           <p></p>
+        </div>
+
+		<!-- z-index: 6  -->
+		<!-- append text , data formating , append text -->
+		<div id="clock3" class="clock">,G:i, - CEST (GMT+1)</div>
+	</main>
+  </body>
+  <!-- libs -->
+  <script src="scripts/lib/comfy.js"></script>
+  <script src="scripts/lib/sam.js"></script>
+  <script src="scripts/lib/beat-beat.js"></script>
+  <script src="scripts/lib/node-vibrant.js"></script>
+
+  <!-- startup -->
+  <script src="scripts/dom.js"></script>
+  <script src="scripts/settings.js"></script>
+  <script src="scripts/config.js"></script>
+  <script src="index.js"></script>
+
+  <!-- widgets -->
+  <script src="scripts/widgets/alertbox.js"></script>
+  <script src="scripts/widgets/info_field.js"></script>
+  <script src="scripts/widgets/clock.js"></script>
+  <script src="scripts/widgets/chat.js"></script>
+  <script src="scripts/widgets/musicbox.js"></script>
+  <script src="scripts/widgets/tbot.js"></script>
+  <script src="scripts/comfy_handler.js"></script>
+  <script>
+      // autoplaying a song 
+      setTimeout(() => {play_music();}, 1000);
+  </script>
+</html>
