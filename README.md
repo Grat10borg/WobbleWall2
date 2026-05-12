@@ -62,17 +62,17 @@ make sure WobbleWall is locally running and import the locally running website e
 ## List of current commands.
 - `!clip` : clips the last 30 seconds of the stream.
 - `!mark` : creates a stream marker when its ran
-- `!dice <number>` : returns a random number between 0 and <specified number>
+- `!dice <number>` : returns a random number between 0 and {specified number}
 - `!lurk` : returns a thanks for lurking message
  
 - social media link commands
-- `!yt` & `!youtube` : returns <youtube link>
-- `!twitch` & `!live` : returns <twitch link>
-- `!fedi` : returns <fediverse link>
-- `!discord` : returns <discord invite>
-- `!rss` : returns <rss link>
-- `!bsky` : returns <bsky link>
-- `!kofi` : returns <kofi link>
+- `!yt` & `!youtube` : returns {youtube link}
+- `!twitch` & `!live` : returns {twitch link}
+- `!fedi` : returns {fediverse link}
+- `!discord` : returns {discord invite}
+- `!rss` : returns {rss link}
+- `!bsky` : returns {bsky link}
+- `!kofi` : returns {kofi link}
 
 VIPs & Mods only
 - `!play <YT-link>` :  plays a video on the media player, scrolls it into view if hidden.
@@ -80,7 +80,7 @@ VIPs & Mods only
 - `!pause` : pauses currently playing video
 - `!resume` : resumes currently paused video
 - `!mute` : mutes sound in the video
-- `!volume <number 0 to 100>` : set volume of video
+- `!volume {number 0 to 100}` : set volume of video
 - `!stop` : stops currently playing video & music
 
 Music player
