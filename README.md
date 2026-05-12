@@ -34,6 +34,8 @@ the differing icons in WW does not follow the design of Twitch entirely.
 - Subscriber is 🔷
 - VIP is: 🔻
 
+The chat has support for BetterTV, FrankerFaceZ 7TV and Twitch pronouns
+
 ## Setting WobbleWall up
 
 To setup Wobblewall please make a config.js file in scripts/ named "config.js"
