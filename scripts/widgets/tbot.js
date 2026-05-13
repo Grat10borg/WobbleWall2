@@ -9,6 +9,7 @@ let tbot = {
 	dice: dice.bind($),
 	lurk: lurk.bind($),
 	click: click.bind($), // i am depraved. :)
+    say: say.bind($),
     // species
     // discord
     // pronouns
@@ -105,4 +106,8 @@ function click() {
     if(settings.tbot.click_cmd_on) { 
         audio_play("assets/clicker.mp3"); 
     }
+}
+
+function say(message) {
+    ComfyJS.Say(message);
 }

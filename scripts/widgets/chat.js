@@ -41,8 +41,8 @@ async function message(user, message, command, extra) {
 	// handle message text
 	let returnMessage = message.replaceAll(/\r\s/gm, ""); 
 	let username = user.displayName;
-	if (command) { 
-		returnMessage = ":"+command+" "+message;
+	if (message[0] == "!") { 
+		returnMessage = message.replace("!", ":");
     }
 
 	if (settings.chat.shorten_names == true) {
@@ -83,7 +83,7 @@ async function message(user, message, command, extra) {
     if (f.broadcaster) { div.querySelector(".sub").style.display = "none"; }
     if (f.subscriber == false) { div.querySelector(".sub").style.display = "none";}
     if (f.broadcaster == false) { div.querySelector(".streamer").style.display = "none";}
-    if (users[username].pronouns == false) { div.querySelector(".pronouns").style.display = "none";}
+    if (users[user.displayName].pronouns == false) { div.querySelector(".pronouns").style.display = "none";}
 
     // add italic text if needed
     if (extra.messageType == "action") { div.querySelector(".text").setAttribute("style", "font-style: italic")} // /me command

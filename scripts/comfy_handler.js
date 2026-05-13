@@ -3,7 +3,6 @@ ComfyJS.Init(config.bot_login, config.bot_oauth, config.twitch_login);
 
 ComfyJS.onChat = (user, message, flags, self, extra) => {
     (async () => {
-        $$.log(message, extra);
         chat.message(await getProfile(user, flags, extra), message, false, extra);
     })()
 }
@@ -49,7 +48,7 @@ ComfyJS.onHypeTrain = (level, progressToNextLevel, goalToNextLevel,
 
 ComfyJS.onCommand = (user, command, message, flags, extra) => {
     (async () => {
-        //chat.message(await getProfile(user, flags, extra), `!${command} ${message}`, false, extra);
+        chat.message(await getProfile(user, flags, extra), `!${command} ${message}`, false, extra);
         await getProfile(user, flags, extra);
     let perm_commands = [
         "play",
@@ -64,7 +63,8 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
         "skip",
         "stop",
         "clear",
-        "click"
+        "click",
+        "say"
     ]
 
     let commands = {
@@ -109,7 +109,8 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
         mark: () => {tbot.mark()},
         dice: () => {tbot.dice(message)},
         lurk: () => {tbot.lurk(user)},
-        click: () => {tbot.click()}
+        click: () => {tbot.click()},
+        say: () => {tbot.say(message)}
     }
 
     if (commands[command]
