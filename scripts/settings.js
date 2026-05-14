@@ -8,22 +8,7 @@ var settings = {
 		shorten_names: true, // - _ /s are cut away  
 	},
 
-	alerts: {
-		follow_msg: "$USER has been assmilated",
-		follow_img: "custom/blop_spin_bg.gif",
-
-		sub_msg: "$USER just subbed, thats very cool :3",
-		sub_img: "",
-		
-		cheer_msg: "$USER just cheered with $AMOUNT",
-		cheer_img: "",
-		
-		host_msg: "$USER just hosted with $AMOUNT viewers",
-		host_img: "",
-		
-		raid_msg: "$USER just raided us!! be welcoming now!",
-		raid_msg: "",
-	},
+	// alertbox settings planned.
 
 	// misc commands
 	tbot: {
@@ -34,10 +19,6 @@ var settings = {
 		lurk_cmd_on: true,
 	},
 
-	widget: {
-		clock_on: true,
-		clock_before: "", // text before date string
-		clock_format: "G:i", // JS date formating
-		clock_after: " - CEST (USC+2)",  // text after date string
-	},
+	// Clock settings are manually placed inside the HTML files.
+	// this is so you can have unique clocks eg, one only showing the date, and another that shows the time.
 }
