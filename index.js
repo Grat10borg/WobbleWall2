@@ -38,12 +38,17 @@ let third_party_emotes = {};
     let Frank = await $$.api(`https://api.frankerfacez.com/v1/room/${config.twitch_login}`, false);
     
     // 7TV, BetterTV, FrankerfaceZ sorted into an object.
-    TV.emote_set.emotes.forEach(e => { third_party_emotes[e.name] = `https:${e.data.host.url}/4x.webp`; });
+    TV.emote_set.emotes.forEach(e => {
+        if(settings.chat.banned_emotes.includes(e.name)) { return; }
+        third_party_emotes[e.name] = `https:${e.data.host.url}/4x.webp`; });
     [ ...BTVG, ...BTV.channelEmotes, ...BTV.sharedEmotes].forEach
-    (e => { third_party_emotes[e.code] = `https://cdn.betterttv.net/emote/${e.id}/3x`; });
+    (e => { 
+        if(settings.chat.banned_emotes.includes(e.code)) { return; }
+        third_party_emotes[e.code] = `https://cdn.betterttv.net/emote/${e.id}/3x`; });
 
     let set = Frank.room.set;
     Frank.sets[set].emoticons.forEach(e => { 
+        if(settings.chat.banned_emotes.includes(e.name)) { return; }
         // choose animated version if available.
         if (e.animated) {
             third_party_emotes[e.name] = e.animated[4]; 
@@ -51,9 +56,8 @@ let third_party_emotes = {};
             third_party_emotes[e.name] = e.urls[4]; 
         }
     });
-
 })()
-
+$$.log(third_party_emotes);
 
 // fetch profile pictures from the twitch api
 let users = {};
