@@ -64,7 +64,8 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
         "stop",
         "clear",
         "click",
-        "say"
+        "say",
+        "qoute"
     ]
 
     let commands = {
@@ -110,7 +111,8 @@ ComfyJS.onCommand = (user, command, message, flags, extra) => {
         dice: () => {tbot.dice(message)},
         lurk: () => {tbot.lurk(user)},
         click: () => {tbot.click()},
-        say: () => {tbot.say(message)}
+        say: () => {tbot.say(message)},
+        qoute: () => {tbot.qoute(message)}
     }
 
     if (commands[command]

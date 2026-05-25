@@ -4,8 +4,12 @@
   "description": "Twitch Overlay for Grat10's Streams",
   "main": "index.js",
   "scripts": {
-    "start": "serve -p 3001"
+    "start": "PORT=3001 node server.js"
   },
   "author": "Grat10",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "express": "^5.2.1"
+  }
 }

@@ -10,6 +10,7 @@ let tbot = {
 	lurk: lurk.bind($),
 	click: click.bind($), // i am depraved. :)
     say: say.bind($),
+    qoute: qoute.bind($),
     // species
     // discord
     // pronouns
@@ -22,9 +23,12 @@ let tbot = {
 /* tbot functions */
 
 // automatic advertisement
-setInterval(() => {
-    let ads = ["the onscreen chat uses Twitch Pronouns, please specify your pronouns here: https://pr.alejo.io/"];
-    ComfyJS.Say(ads[Math.floor(Math.random() * (ads.length -1))]);
+setInterval(async () => {
+    let qoutes = await (await (await fetch("/quotes")).json());
+    let ads = ["the onscreen chat uses Twitch Pronouns, please specify your pronouns here: https://pr.alejo.io/",
+               ...qoutes];
+
+    ComfyJS.Say(ads[Math.floor(Math.random() * (ads.length))]);
 }, 1000 * 60 * 60 * 1) // repeat every hour
 
 // clip the last 30s / ~27s of the stream
@@ -110,4 +114,12 @@ function click() {
 
 function say(message) {
     ComfyJS.Say(message);
+}
+
+function qoute(message) {
+    // create a new quote
+    fetch("/quote", {
+        method: "POST",
+        body: message
+    })
 }

@@ -4,7 +4,7 @@ var settings = {
 		emotes_on: true, 
 		// some emotes aren't easilly distinguishable from someone just talking normally,
 		// also use this to ban any uncomfortable emotes you might have <3
-		banned_emotes: ["s!", "D:", "c!", "h!", "l!", "p!", "r!", "v!", "w!", "z!"], 
+		banned_emotes: ["glorp", "s!", "D:", "c!", "h!", "l!", "p!", "r!", "v!", "w!", "z!"], 
 		shorten_names: true, // - _ /s are cut away  
 	},
 
