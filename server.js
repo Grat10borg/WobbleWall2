@@ -57,7 +57,7 @@ app.post("/quote", body_parser.text({type: "*/*"}), async (req, res) => {
 })
 
 // serve the static files
-app.use("/", express.static(__dirname));
+app.use("/", express.static(__dirname, {extensions: ["html"]}));
 
 // start the server
 let port = process.env.PORT || 3000;
