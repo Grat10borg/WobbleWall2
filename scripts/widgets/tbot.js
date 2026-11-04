@@ -122,4 +122,5 @@ function qoute(message) {
         method: "POST",
         body: message
     })
+    ComfyJS.Say(message +" has been added to DB ^w^");
 }

@@ -43,24 +43,24 @@ async function audio_play(path) {
 
     $$.log(sound);
     sound.play((isInitial) => { 
+        $$.log("test");
         //gainNode.connect(sound.context.destination);
         //gainNode.gain.setValueAtTime(-1, sound.context.currentTime); 
         //sound.source.connect(gainNode)
-        if(isInitial) {
-            return;
-        }
+        //if(isInitial) {
+        //    return;
+        //}
         // This callback will execute at every beat of the song
         beats.forEach(beat => {
             
-             
             // if beat is perfectly devisible with specified number
             // 1 = on beat
             // 2 = offbeat
             // 3 = ever third beat
-            //$$.log(`[beat ${index}] is % with ${beat.bpm}`);
+            $$.log(`[beat ${index}] is % with ${beat.bpm}`);
             if (! (index % beat.bpm) && sound.context.state == "running") {
                 
-                //$$.log(beat);
+                $$.log(beat);
                 beat.amount = beat.amount + beat.change_amount;
                 let reset = false;
                 if(beat.amount >= 360) {
